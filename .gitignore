@@ -1,5 +1,10 @@
 #ignore all kind of files
-*
+*.*
+abbrev_defs
+eshell
+recentf
+smex-items
+tramp
 #except elisp files
 !*.el
 !.gitignore
