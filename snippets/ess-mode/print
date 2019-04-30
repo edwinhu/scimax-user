@@ -7,4 +7,4 @@
 # condition: (string= ess-language "SAS")
 # type: snippet
 # --
-$0proc print data=${1:&syslast.}(obs=${2:25});run;
+$0proc print data=${1:&syslast.}(obs=${2:25}) width=min;run;

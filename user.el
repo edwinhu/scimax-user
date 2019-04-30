@@ -12,8 +12,12 @@
 (require 'org-tempo)
 (require 'scimax-statistics)
 (require 'ob-sas)
+(use-package ox-twbs)
+(use-package ox-pandoc)
 (setq org-latex-prefer-user-labels t)
 (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+(setq org-src-preserve-indentation nil 
+      org-edit-src-content-indentation 0)
 
 ;; scimax default latex packages are weird, so overwrite
 (setq org-latex-default-packages-alist
@@ -45,22 +49,30 @@
 	("hang,flushmargin" "footmisc" nil)
 	))
 
+;; TRAMP cache password
+(setq password-cache-expiry nil)
+(add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+
 ;; Replace default ESS SAS command with iESS
 (defun SAS ()
   "Call 'SAS', from SAS Institute."
   (ess-sas-interactive))
 ;; (setq-default ess-sas-submit-command-options "-nodms -rsasuser -noovp -nosyntaxcheck -nonews")
 
+(setq comint-scroll-to-bottom-on-input t)
+(setq comint-scroll-to-bottom-on-output t)
+(setq comint-move-point-for-output t)
+
 (defun ess-eval-region-or-line-invisibly-and-step ()
   "Evaluate region if active, otherwise the current line and step.
-Evaluation is done visibly.
+Evaluation is done invisibly.
 Note that when inside a package and namespaced evaluation is in
 place (see `ess-r-set-evaluation-env') evaluation of multiline
 input will fail."
   (interactive)
-  (ess-force-buffer-current)
-  (display-buffer (ess-get-process-buffer))
-  (ess-eval-region-or-line-and-step))
+  (if (and transient-mark-mode mark-active)
+      (call-interactively 'ess-eval-region)
+    (call-interactively 'ess-eval-line-and-step)))
 
 ;; Re-bind C-c
 (eval-after-load "ess-mode"
